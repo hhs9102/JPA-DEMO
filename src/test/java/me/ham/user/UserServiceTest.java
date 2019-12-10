@@ -20,6 +20,7 @@ class UserServiceTest {
 
     List<User> userList;
 
+    //TODO BASIC, SILVER, GOLD 유저 생성 및 경계선 User 생성
     @Before("setUp")
     public void setUp(){
         userList = Arrays.asList(new User("김철수")
@@ -37,6 +38,7 @@ class UserServiceTest {
     }
 
     @Test
+    //findUser ID가 아닌 name으로 조회하는 service 생성
     public void findUser() {
         saveUser();
         User user = userService.findUser(1);
@@ -76,6 +78,7 @@ class UserServiceTest {
     }
 
     @Test
+    //각 User 이름을 통해 체크하는 로직으로 변경 필요.
     public void upgradeLevelToSilver(){
         saveUser();
         User toSilverUser = userService.findUser(1);
