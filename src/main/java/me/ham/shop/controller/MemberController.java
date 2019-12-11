@@ -24,8 +24,13 @@ public class MemberController {
     }
 
     @PostMapping(value = "/member")
-    public void putMember(@RequestBody Member member){
+    public void postMember(@RequestBody Member member){
         memberRepository.insertMember(member);
+    }
+
+    @PutMapping(value = "/member")
+    public void putMember(@RequestBody Member member){
+        memberRepository.updateMember(member);
     }
 
 }

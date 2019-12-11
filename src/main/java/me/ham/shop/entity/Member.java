@@ -1,7 +1,7 @@
 package me.ham.shop.entity;
 
 import jdk.nashorn.internal.objects.annotations.Getter;
-import jdk.nashorn.internal.objects.annotations.Setter;
+import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
@@ -9,6 +9,7 @@ import javax.validation.constraints.NotEmpty;
 
 @Entity
 @ToString
+@Setter
 public class Member {
 
     @Id

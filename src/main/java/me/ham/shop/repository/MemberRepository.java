@@ -2,15 +2,10 @@ package me.ham.shop.repository;
 
 import lombok.extern.slf4j.Slf4j;
 import me.ham.shop.entity.Member;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.cfg.Configuration;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
 import javax.transaction.Transactional;
 import java.util.List;
 
@@ -36,4 +31,11 @@ public class MemberRepository {
         log.info(member.toString());
     }
 
+    public void updateMember(Member member) {
+        Member dbMember = entityManager.find(Member.class, member);
+        dbMember.setName(member.getName());
+        dbMember.setCity(member.getCity());
+        entityManager.persist(dbMember);
+        log.info(dbMember.toString());
+    }
 }
