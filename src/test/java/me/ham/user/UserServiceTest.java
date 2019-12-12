@@ -9,8 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class UserServiceTest {
@@ -18,31 +17,23 @@ class UserServiceTest {
     @Autowired
     UserService userService;
 
-    List<User> userList;
-
-    //TODO BASIC, SILVER, GOLD 유저 생성 및 경계선 User 생성
-    @Before("setUp")
-    public void setUp(){
-        userList = Arrays.asList(new User("김철수")
-                ,new User("이영자")
-                ,new User("신동엽")
-                ,new User("유재석")
-                ,new User("양세형"));
-    }
-
+    @Autowired
+    UserDao userDao;
 
     @Test
     public void saveUser() {
-        User user = new User("함호식");
+        User user = new User();
+        user.setName("함호식");
         userService.saveUser(user);
     }
 
     @Test
-    //findUser ID가 아닌 name으로 조회하는 service 생성
     public void findUser() {
-        saveUser();
-        User user = userService.findUser(1);
-        assertEquals(1, user.getId());
+        User user = new User();
+        user.setName("함호식");
+        userService.saveUser(user);
+        user = userDao.findByName("함호식");
+        assertEquals("함호식",user.getName());
         System.out.println(user.getId());
     }
 
@@ -99,4 +90,55 @@ class UserServiceTest {
         assertEquals(Level.BASIC, basicUser.getLevel());
     }
 
+    @Test
+    @DisplayName("사용자 레벨 관리 기능 테스트")
+    public void allUserUpgradeTest(){
+        List<User> userList = Arrays.asList(
+             User.builder().name("이영자").level(Level.BASIC).loginCnt(49).recommendCnt(30).build()    //still Basic
+            ,User.builder().name("김철수").level(Level.BASIC).loginCnt(50).recommendCnt(33).build()    //toSilver
+            ,User.builder().name("함용문").level(Level.BASIC).loginCnt(50).recommendCnt(30).build()    //toSilver
+            ,User.builder().name("김동민").level(Level.SILVER).loginCnt(50).recommendCnt(29).build()   //still Silver
+            ,User.builder().name("유재석").level(Level.SILVER).loginCnt(50).recommendCnt(30).build()   //toGold
+            ,User.builder().name("임골드").level(Level.GOLD).loginCnt(99).recommendCnt(99).build()     //still Gold
+        );
+        userDao.saveAll(userList);
+
+        int changedUserCount = userService.upgradeUsers();
+
+        assertAll(
+                () -> assertEquals(Level.BASIC, userDao.findByName("이영자").getLevel())
+                ,() -> assertEquals(Level.SILVER, userDao.findByName("김철수").getLevel())
+                ,() -> assertEquals(Level.SILVER, userDao.findByName("함용문").getLevel())
+                ,() -> assertEquals(Level.SILVER, userDao.findByName("김동민").getLevel())
+                ,() -> assertEquals(Level.GOLD, userDao.findByName("유재석").getLevel())
+                ,() -> assertEquals(Level.GOLD, userDao.findByName("임골드").getLevel())
+                ,() -> assertEquals(3, changedUserCount)
+        );
+    }
+
+    @Test
+    @DisplayName("사용자 레벨 관리 기능 테스트 - 홀수달은 더 낮은 회수로 Upgrade 시킨다.")
+    public void allUserUpgradeByMonthTest(){
+        List<User> userList = Arrays.asList(
+                User.builder().name("이영자").level(Level.BASIC).loginCnt(49).recommendCnt(30).build()     //toSilver
+                ,User.builder().name("김철수").level(Level.BASIC).loginCnt(50).recommendCnt(33).build()    //toSilver
+                ,User.builder().name("함용문").level(Level.BASIC).loginCnt(50).recommendCnt(30).build()    //toSilver
+                ,User.builder().name("김동민").level(Level.SILVER).loginCnt(50).recommendCnt(29).build()   //toGold
+                ,User.builder().name("유재석").level(Level.SILVER).loginCnt(50).recommendCnt(30).build()   //toGold
+                ,User.builder().name("임골드").level(Level.GOLD).loginCnt(99).recommendCnt(99).build()     //still Gold
+        );
+        userDao.saveAll(userList);
+
+        int changedUserCount = userService.upgradeUsersByMonthEvent(1);
+
+        assertAll(
+                () -> assertEquals(Level.SILVER, userDao.findByName("이영자").getLevel())
+                ,() -> assertEquals(Level.SILVER, userDao.findByName("김철수").getLevel())
+                ,() -> assertEquals(Level.SILVER, userDao.findByName("함용문").getLevel())
+                ,() -> assertEquals(Level.GOLD, userDao.findByName("김동민").getLevel())
+                ,() -> assertEquals(Level.GOLD, userDao.findByName("유재석").getLevel())
+                ,() -> assertEquals(Level.GOLD, userDao.findByName("임골드").getLevel())
+                ,() -> assertEquals(5, changedUserCount)
+        );
+    }
 }
