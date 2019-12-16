@@ -6,6 +6,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
 
+import java.security.Signature;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
@@ -14,6 +16,20 @@ class SingletonTest {
 
     @Autowired
     ApplicationContext applicationContext;
+
+    @Test
+    public void singletonTestPreView(){
+        Singleton singleton1 = (Singleton) applicationContext.getBean("singleton1");
+        Singleton singleton2 = (Singleton) applicationContext.getBean("singleton2");
+//        singleton1==singleton2?
+    }
+
+
+
+
+
+
+
 
     @Test
     public void singletonTest(){

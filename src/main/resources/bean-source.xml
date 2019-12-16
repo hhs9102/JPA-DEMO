@@ -9,4 +9,6 @@
     <bean id="singleton2" class="me.ham.bean.Singleton">
         <property name="name" value="ForTest"/>
     </bean>
+
+
 </beans>
