@@ -16,9 +16,11 @@ class HelloTest {
     public void dynamicProxyTest(){
         UppercaseHandler uppercaseHandler = new UppercaseHandler();
         uppercaseHandler.setTarget(new HelloTarget());
-        Hello proxiedHello = (Hello) Proxy.newProxyInstance(getClass().getClassLoader(), new Class[]{Hello.class}, uppercaseHandler);
+        Hello proxiedHello = (Hello) Proxy.newProxyInstance(getClass().getClassLoader()
+                , new Class[]{Hello.class}
+                , uppercaseHandler);
+        
         String result = proxiedHello.sayHello("hamhosik");
-
         assertEquals(true, result.startsWith("HAMHOSIK"));
     }
 }
