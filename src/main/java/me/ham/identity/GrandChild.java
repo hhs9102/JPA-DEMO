@@ -1,19 +1,18 @@
 package me.ham.identity;
 
+import lombok.Data;
 import lombok.Getter;
 import me.ham.identity.id.GrandChildId;
 
 import javax.persistence.*;
 
 @Entity
-@Getter
+@Data
 @IdClass(GrandChildId.class)
-public class GrandChild {
+public class GrandChild extends Person{
     @Id
     @Column(name = "grand_child_id")
-    @GeneratedValue
     private Long id;
-
 
     @Id
     @ManyToOne
