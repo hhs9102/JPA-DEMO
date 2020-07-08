@@ -1,7 +1,10 @@
-package me.ham.identity;
+package me.ham.identity.embeddable;
 
-import me.ham.identity.id.ChildId;
-import me.ham.identity.id.GrandChildId;
+import me.ham.identity.embeddable.Child;
+import me.ham.identity.embeddable.GrandChild;
+import me.ham.identity.embeddable.Parent;
+import me.ham.identity.embeddable.id.ChildId;
+import me.ham.identity.embeddable.id.GrandChildId;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,14 +39,14 @@ public class IdentityTest {
         Child child = new Child();
 
         ChildId childId = new ChildId();
-        childId.setParent(parent.getId());
         Long childRandomId = ThreadLocalRandom.current().nextLong(1, 9999);
         childId.setId(childRandomId);
+        childId.setParentId(parent.getId());
 
         child.setName("함장남");
         child.setAge(17);
         child.setParent(parent);
-        child.setId(childRandomId);
+        child.setChildId(childId);
 
         entityManager.persist(child);
         Child child1 = entityManager.find(Child.class, childId);
@@ -62,7 +65,7 @@ public class IdentityTest {
 
         grandChild.setName("함아래");
         grandChild.setAge(3);
-        grandChild.setId(grandChildRandomId);
+        grandChild.setId(grandChildId);
         grandChild.setChild(child);
 
         entityManager.persist(grandChild);

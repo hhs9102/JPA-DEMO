@@ -1,10 +1,8 @@
-package me.ham.identity;
+package me.ham.identity.idclass;
 
 import lombok.Getter;
 import lombok.Setter;
-import me.ham.identity.id.ChildId;
-import org.hibernate.annotations.GenericGenerator;
-import org.springframework.cglib.core.DefaultGeneratorStrategy;
+import me.ham.identity.idclass.id.ChildId;
 
 import javax.persistence.*;
 import java.util.Objects;

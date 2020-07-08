@@ -1,8 +1,7 @@
-package me.ham.identity;
+package me.ham.identity.idclass;
 
 import lombok.Data;
-import lombok.Getter;
-import me.ham.identity.id.GrandChildId;
+import me.ham.identity.idclass.id.GrandChildId;
 
 import javax.persistence.*;
 

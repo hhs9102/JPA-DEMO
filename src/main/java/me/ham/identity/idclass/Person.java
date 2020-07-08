@@ -1,4 +1,4 @@
-package me.ham.identity;
+package me.ham.identity.idclass;
 
 import lombok.Data;
 
